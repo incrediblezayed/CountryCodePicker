@@ -326,6 +326,7 @@ class CountryCodePickerState extends State<CountryCodePicker> {
       });
     } else {
       showMaterialModalBottomSheet(
+        useRootNavigator: true,
         barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
         backgroundColor: widget.backgroundColor ?? Colors.transparent,
         context: context,
