@@ -282,10 +282,10 @@ class CountryCodePickerState extends State<CountryCodePicker> {
   }
 
   void showCountryCodePickerDialog() {
-    if (!UniversalPlatform.isAndroid && !UniversalPlatform.isIOS) {
+    // if (!UniversalPlatform.isAndroid && !UniversalPlatform.isIOS) {
       showDialog(
         useRootNavigator: true,
-        barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
+        // barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
         // backgroundColor: widget.backgroundColor ?? Colors.transparent,
         context: context,
         builder: (context) => Center(
@@ -324,44 +324,44 @@ class CountryCodePickerState extends State<CountryCodePicker> {
           _publishSelection(e);
         }
       });
-    } else {
-      showMaterialModalBottomSheet(
-        useRootNavigator: true,
-        barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
-        backgroundColor: widget.backgroundColor ?? Colors.transparent,
-        context: context,
-        builder: (context) => Center(
-          child: SelectionDialog(
-            elements,
-            favoriteElements,
-            showCountryOnly: widget.showCountryOnly,
-            emptySearchBuilder: widget.emptySearchBuilder,
-            searchDecoration: widget.searchDecoration,
-            searchStyle: widget.searchStyle,
-            textStyle: widget.dialogTextStyle,
-            boxDecoration: widget.boxDecoration,
-            showFlag: widget.showFlagDialog != null
-                ? widget.showFlagDialog
-                : widget.showFlag,
-            flagWidth: widget.flagWidth,
-            flagDecoration: widget.flagDecoration,
-            size: widget.dialogSize,
-            backgroundColor: widget.dialogBackgroundColor,
-            barrierColor: widget.barrierColor,
-            hideSearch: widget.hideSearch,
-            closeIcon: widget.closeIcon,
-          ),
-        ),
-      ).then((e) {
-        if (e != null) {
-          setState(() {
-            selectedItem = e;
-          });
-
-          _publishSelection(e);
-        }
-      });
-    }
+    // } else {
+    //   showMaterialModalBottomSheet(
+    //     useRootNavigator: true,
+    //     barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
+    //     backgroundColor: widget.backgroundColor ?? Colors.transparent,
+    //     context: context,
+    //     builder: (context) => Center(
+    //       child: SelectionDialog(
+    //         elements,
+    //         favoriteElements,
+    //         showCountryOnly: widget.showCountryOnly,
+    //         emptySearchBuilder: widget.emptySearchBuilder,
+    //         searchDecoration: widget.searchDecoration,
+    //         searchStyle: widget.searchStyle,
+    //         textStyle: widget.dialogTextStyle,
+    //         boxDecoration: widget.boxDecoration,
+    //         showFlag: widget.showFlagDialog != null
+    //             ? widget.showFlagDialog
+    //             : widget.showFlag,
+    //         flagWidth: widget.flagWidth,
+    //         flagDecoration: widget.flagDecoration,
+    //         size: widget.dialogSize,
+    //         backgroundColor: widget.dialogBackgroundColor,
+    //         barrierColor: widget.barrierColor,
+    //         hideSearch: widget.hideSearch,
+    //         closeIcon: widget.closeIcon,
+    //       ),
+    //     ),
+    //   ).then((e) {
+    //     if (e != null) {
+    //       setState(() {
+    //         selectedItem = e;
+    //       });
+    //
+    //       _publishSelection(e);
+    //     }
+    //   });
+    // }
   }
 
   void _publishSelection(CountryCode e) {
