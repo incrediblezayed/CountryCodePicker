@@ -16,6 +16,7 @@ class SelectionDialog extends StatefulWidget {
   final Decoration? flagDecoration;
   final Size? size;
   final bool hideSearch;
+  final bool hideCloseButton;
   final Icon? closeIcon;
 
   /// Background color of SelectionDialog
@@ -30,22 +31,23 @@ class SelectionDialog extends StatefulWidget {
   SelectionDialog(
     this.elements,
     this.favoriteElements, {
-    Key? key,
-    this.showCountryOnly,
-    this.emptySearchBuilder,
-    InputDecoration searchDecoration = const InputDecoration(),
-    this.searchStyle,
-    this.textStyle,
-    this.boxDecoration,
-    this.showFlag,
-    this.flagDecoration,
-    this.flagWidth = 32,
-    this.size,
-    this.backgroundColor,
-    this.barrierColor,
-    this.hideSearch = false,
-    this.closeIcon,
-  })  : this.searchDecoration = searchDecoration.prefixIcon == null
+        Key? key,
+        this.showCountryOnly,
+        this.emptySearchBuilder,
+        InputDecoration searchDecoration = const InputDecoration(),
+        this.searchStyle,
+        this.textStyle,
+        this.boxDecoration,
+        this.showFlag,
+        this.flagDecoration,
+        this.flagWidth = 32,
+        this.size,
+        this.backgroundColor,
+        this.barrierColor,
+        this.hideSearch = false,
+        this.hideCloseButton = false,
+        this.closeIcon,
+      })  : this.searchDecoration = searchDecoration.prefixIcon == null
             ? searchDecoration.copyWith(prefixIcon: Icon(Icons.search))
             : searchDecoration,
         super(key: key);
@@ -64,25 +66,25 @@ class _SelectionDialogState extends State<SelectionDialog> {
         child: Container(
           clipBehavior: Clip.hardEdge,
           width: widget.size?.width ?? MediaQuery.of(context).size.width,
-          height:
-              widget.size?.height ?? MediaQuery.of(context).size.height * 0.85,
+          height:widget.size?.height ?? MediaQuery.of(context).size.height * 0.85,
           decoration: widget.boxDecoration ??
               BoxDecoration(
-                color: widget.backgroundColor ?? Colors.white,
+                color: widget.backgroundColor ?? Colors.transparent,
                 borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                boxShadow: [
-                  BoxShadow(
-                    color: widget.barrierColor ?? Colors.grey.withOpacity(1),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
-                  ),
-                ],
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: widget.barrierColor ?? Colors.grey.withOpacity(1),
+                //     spreadRadius: 5,
+                //     blurRadius: 7,
+                //     offset: Offset(0, 3), // changes position of shadow
+                //   ),
+                // ],
               ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              if (!widget.hideCloseButton)
               IconButton(
                 padding: const EdgeInsets.all(0),
                 iconSize: 20,
