@@ -6,6 +6,7 @@ import 'package:country_code_picker/country_codes.dart';
 import 'package:country_code_picker/selection_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_portal/flutter_portal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:universal_platform/universal_platform.dart';
 
@@ -27,6 +28,8 @@ class CountryCodePicker extends StatefulWidget {
   final bool enabled;
   final TextOverflow textOverflow;
   final Icon closeIcon;
+  final bool showAsDropDown;
+  final EdgeInsets dropDownMargin;
 
   /// Barrier color of ModalBottomSheet
   final Color? barrierColor;
@@ -84,6 +87,10 @@ class CountryCodePicker extends StatefulWidget {
   /// with customized codes.
   final List<Map<String, String>> countryList;
 
+  final Alignment? portalAnchor;
+  final Alignment? childAnchor;
+  final double portalHeight;
+
   CountryCodePicker({
     this.onChanged,
     this.onInit,
@@ -91,6 +98,7 @@ class CountryCodePicker extends StatefulWidget {
     this.favorite = const [],
     this.textStyle,
     this.padding = const EdgeInsets.all(8.0),
+    this.dropDownMargin = const EdgeInsets.all(0),
     this.showCountryOnly = false,
     this.searchDecoration = const InputDecoration(),
     this.searchStyle,
@@ -118,6 +126,10 @@ class CountryCodePicker extends StatefulWidget {
     this.dialogBackgroundColor,
     this.closeIcon = const Icon(Icons.close),
     this.countryList = codes,
+    this.showAsDropDown = false,
+    this.portalAnchor = Alignment.topCenter,
+    this.childAnchor = Alignment.bottomCenter,
+    this.portalHeight = 200,
     Key? key,
   }) : super(key: key);
 
@@ -151,18 +163,93 @@ class CountryCodePickerState extends State<CountryCodePicker> {
   CountryCode? selectedItem;
   List<CountryCode> elements = [];
   List<CountryCode> favoriteElements = [];
-
+  bool isVisible = false;
   CountryCodePickerState(this.elements);
+  final GlobalKey _portalChildKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     Widget _widget;
-    if (widget.builder != null)
-      _widget = InkWell(
-        onTap: showCountryCodePickerDialog,
-        child: widget.builder!(selectedItem),
-      );
-    else {
+    if (widget.builder != null) {
+      if (widget.showAsDropDown) {
+        _widget = PortalEntry(
+          visible: isVisible,
+          portal: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              setState(() {
+                isVisible = false;
+              });
+            },
+          ),
+          child: PortalEntry(
+            visible: isVisible,
+              portalAnchor: widget.portalAnchor,
+              childAnchor: widget.childAnchor,
+              portal: Builder(
+                builder: (context) {
+                  final RenderBox renderBox = _portalChildKey.currentContext?.findRenderObject() as RenderBox;
+                  final Size size = renderBox.size;
+                  return Container(
+                    width: size.width,
+                    height: widget.portalHeight,
+                    padding: widget.dropDownMargin,
+                    child: Material(
+                      borderRadius: BorderRadius.circular(8),
+                      elevation: 2,
+                      child: Builder(
+                        builder: (context) {
+                          return SelectionDialog(
+                            elements,
+                            favoriteElements,
+                            showCountryOnly: widget.showCountryOnly,
+                            emptySearchBuilder: widget.emptySearchBuilder,
+                            searchDecoration: widget.searchDecoration,
+                            searchStyle: widget.searchStyle,
+                            textStyle: widget.dialogTextStyle,
+                            boxDecoration: widget.boxDecoration,
+                            showFlag: widget.showFlagDialog != null
+                                ? widget.showFlagDialog
+                                : widget.showFlag,
+                            flagWidth: widget.flagWidth,
+                            backgroundColor: widget.dialogBackgroundColor,
+                            barrierColor: widget.barrierColor,
+                            hideSearch: widget.hideSearch,
+                            closeIcon: widget.closeIcon,
+                            flagDecoration: widget.flagDecoration,
+                            hideCloseButton: true,
+                            isShownAsDropDown: true,
+                            onCountryCodeChange: (countryCode){
+                              setState(() {
+                                isVisible = false;
+                                selectedItem = countryCode;
+                              });
+                              _publishSelection(countryCode);
+                            },
+                          );
+                        }
+                      ),
+                    ),
+                  );
+                }
+              ),
+              child: InkWell(
+                key: _portalChildKey,
+                  onTap: () {
+                    setState(() {
+                      isVisible = true;
+                    });
+                  },
+                  child: widget.builder!(selectedItem))),
+        );
+      }
+      else {
+        _widget = InkWell(
+          onTap: showCountryCodePickerDialog,
+          child: widget.builder!(selectedItem),
+        );
+      }
+    } else {
       _widget = TextButton(
         onPressed: widget.enabled ? showCountryCodePickerDialog : null,
         child: Padding(
