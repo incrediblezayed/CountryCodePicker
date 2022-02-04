@@ -3,6 +3,7 @@ import 'package:country_code_picker/country_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// selection dialog used for selection of the country code
+typedef OnCountryCodeChange = Function(CountryCode countryCode);
 class SelectionDialog extends StatefulWidget {
   final List<CountryCode> elements;
   final bool? showCountryOnly;
@@ -18,6 +19,8 @@ class SelectionDialog extends StatefulWidget {
   final bool hideSearch;
   final bool hideCloseButton;
   final Icon? closeIcon;
+  final bool isShownAsDropDown;
+  final OnCountryCodeChange? onCountryCodeChange;
 
   /// Background color of SelectionDialog
   final Color? backgroundColor;
@@ -47,6 +50,8 @@ class SelectionDialog extends StatefulWidget {
         this.hideSearch = false,
         this.hideCloseButton = false,
         this.closeIcon,
+        this.isShownAsDropDown = false,
+        this.onCountryCodeChange
       })  : this.searchDecoration = searchDecoration.prefixIcon == null
             ? searchDecoration.copyWith(prefixIcon: Icon(Icons.search))
             : searchDecoration,
@@ -203,6 +208,9 @@ class _SelectionDialogState extends State<SelectionDialog> {
   }
 
   void _selectItem(CountryCode e) {
-    Navigator.pop(context, e);
+    widget.onCountryCodeChange?.call(e);
+    if(!widget.isShownAsDropDown){
+      Navigator.pop(context, e);
+    }
   }
 }
