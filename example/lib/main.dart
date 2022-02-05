@@ -143,6 +143,7 @@ class _MyAppState extends State<MyApp> {
                   onChanged: (e) => print(e.toLongString()),
                   initialSelection: 'TF',
                   showCountryOnly: true,
+                  backgroundColor: Colors.white,
                   showOnlyCountryWhenClosed: true,
                   favorite: ['+39', 'FR'],
                   showAsDropDown: true,

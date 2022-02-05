@@ -197,6 +197,7 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                     child: Material(
                       borderRadius: BorderRadius.circular(8),
                       elevation: 2,
+                      color: widget.backgroundColor,
                       child: Builder(
                         builder: (context) {
                           return SelectionDialog(
