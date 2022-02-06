@@ -90,6 +90,7 @@ class CountryCodePicker extends StatefulWidget {
   final Alignment? portalAnchor;
   final Alignment? childAnchor;
   final double portalHeight;
+  final double? portalWidth;
 
   CountryCodePicker({
     this.onChanged,
@@ -130,6 +131,7 @@ class CountryCodePicker extends StatefulWidget {
     this.portalAnchor = Alignment.topCenter,
     this.childAnchor = Alignment.bottomCenter,
     this.portalHeight = 200,
+    this.portalWidth,
     Key? key,
   }) : super(key: key);
 
@@ -191,7 +193,7 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                   final RenderBox renderBox = _portalChildKey.currentContext?.findRenderObject() as RenderBox;
                   final Size size = renderBox.size;
                   return Container(
-                    width: size.width,
+                    width: widget.portalWidth??size.width,
                     height: widget.portalHeight,
                     padding: widget.dropDownMargin,
                     child: Material(

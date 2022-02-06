@@ -147,10 +147,11 @@ class _MyAppState extends State<MyApp> {
                   showOnlyCountryWhenClosed: true,
                   favorite: ['+39', 'FR'],
                   showAsDropDown: true,
-                  portalAnchor: Alignment.bottomCenter,
-                  childAnchor: Alignment.topCenter,
+                  portalAnchor: Alignment.bottomLeft,
+                  childAnchor: Alignment.topLeft,
+                  portalWidth: 400,
                   portalHeight: 250,
-                  dropDownMargin: EdgeInsets.only(left: 40),
+                  dropDownMargin: EdgeInsets.only(left: 10),
                   builder: (item){
                    return Container(
                      color: Colors.yellow,
