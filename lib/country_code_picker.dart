@@ -4,7 +4,6 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:country_code_picker/country_code.dart';
 import 'package:country_code_picker/country_codes.dart';
 import 'package:country_code_picker/selection_dialog.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -174,9 +173,9 @@ class CountryCodePickerState extends State<CountryCodePicker> {
     Widget _widget;
     if (widget.builder != null) {
       if (widget.showAsDropDown) {
-        _widget = PortalEntry(
+        _widget = PortalTarget(
           visible: isVisible,
-          portal: GestureDetector(
+          portalFollower: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {
               setState(() {
@@ -184,60 +183,60 @@ class CountryCodePickerState extends State<CountryCodePicker> {
               });
             },
           ),
-          child: PortalEntry(
-            visible: isVisible,
-              portalAnchor: widget.portalAnchor,
-              childAnchor: widget.childAnchor,
-              portal: Builder(
-                builder: (context) {
-                  final RenderBox renderBox = _portalChildKey.currentContext?.findRenderObject() as RenderBox;
-                  final Size size = renderBox.size;
-                  return Container(
-                    width: widget.portalWidth??size.width,
-                    height: widget.portalHeight,
-                    padding: widget.dropDownMargin,
-                    child: Material(
-                      borderRadius: BorderRadius.circular(8),
-                      elevation: 2,
-                      color: widget.backgroundColor,
-                      child: Builder(
-                        builder: (context) {
-                          return SelectionDialog(
-                            elements,
-                            favoriteElements,
-                            showCountryOnly: widget.showCountryOnly,
-                            emptySearchBuilder: widget.emptySearchBuilder,
-                            searchDecoration: widget.searchDecoration,
-                            searchStyle: widget.searchStyle,
-                            textStyle: widget.dialogTextStyle,
-                            boxDecoration: widget.boxDecoration,
-                            showFlag: widget.showFlagDialog != null
-                                ? widget.showFlagDialog
-                                : widget.showFlag,
-                            flagWidth: widget.flagWidth,
-                            backgroundColor: widget.dialogBackgroundColor,
-                            barrierColor: widget.barrierColor,
-                            hideSearch: widget.hideSearch,
-                            closeIcon: widget.closeIcon,
-                            flagDecoration: widget.flagDecoration,
-                            hideCloseButton: true,
-                            isShownAsDropDown: true,
-                            onCountryCodeChange: (countryCode){
-                              setState(() {
-                                isVisible = false;
-                                selectedItem = countryCode;
-                              });
-                              _publishSelection(countryCode);
-                            },
-                          );
-                        }
-                      ),
-                    ),
-                  );
-                }
-              ),
+          child: PortalTarget(
+              visible: isVisible,
+              anchor: widget.portalAnchor != null && widget.childAnchor != null
+                  ? Aligned(
+                      follower: widget.portalAnchor!,
+                      target: widget.childAnchor!)
+                  : Filled(),
+              portalFollower: Builder(builder: (context) {
+                final RenderBox renderBox = _portalChildKey.currentContext
+                    ?.findRenderObject() as RenderBox;
+                final Size size = renderBox.size;
+                return Container(
+                  width: widget.portalWidth ?? size.width,
+                  height: widget.portalHeight,
+                  padding: widget.dropDownMargin,
+                  child: Material(
+                    borderRadius: BorderRadius.circular(8),
+                    elevation: 2,
+                    color: widget.backgroundColor,
+                    child: Builder(builder: (context) {
+                      return SelectionDialog(
+                        elements,
+                        favoriteElements,
+                        showCountryOnly: widget.showCountryOnly,
+                        emptySearchBuilder: widget.emptySearchBuilder,
+                        searchDecoration: widget.searchDecoration,
+                        searchStyle: widget.searchStyle,
+                        textStyle: widget.dialogTextStyle,
+                        boxDecoration: widget.boxDecoration,
+                        showFlag: widget.showFlagDialog != null
+                            ? widget.showFlagDialog
+                            : widget.showFlag,
+                        flagWidth: widget.flagWidth,
+                        backgroundColor: widget.dialogBackgroundColor,
+                        barrierColor: widget.barrierColor,
+                        hideSearch: widget.hideSearch,
+                        closeIcon: widget.closeIcon,
+                        flagDecoration: widget.flagDecoration,
+                        hideCloseButton: true,
+                        isShownAsDropDown: true,
+                        onCountryCodeChange: (countryCode) {
+                          setState(() {
+                            isVisible = false;
+                            selectedItem = countryCode;
+                          });
+                          _publishSelection(countryCode);
+                        },
+                      );
+                    }),
+                  ),
+                );
+              }),
               child: InkWell(
-                key: _portalChildKey,
+                  key: _portalChildKey,
                   onTap: () {
                     setState(() {
                       isVisible = true;
@@ -245,8 +244,7 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                   },
                   child: widget.builder!(selectedItem))),
         );
-      }
-      else {
+      } else {
         _widget = InkWell(
           onTap: showCountryCodePickerDialog,
           child: widget.builder!(selectedItem),
@@ -289,8 +287,8 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                     widget.showOnlyCountryWhenClosed
                         ? selectedItem!.toCountryStringOnly()
                         : selectedItem.toString(),
-                    style:
-                        widget.textStyle ?? Theme.of(context).textTheme.button,
+                    style: widget.textStyle ??
+                        Theme.of(context).textTheme.labelLarge,
                     overflow: widget.textOverflow,
                   ),
                 ),

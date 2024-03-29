@@ -108,10 +108,10 @@ class _MyAppState extends State<MyApp> {
                   favorite: ['+39', 'FR'],
                   countryFilter: ['IT', 'FR'],
                   showFlagDialog: false,
-                  comparator: (a, b) => b.name.compareTo(a.name),
+                  comparator: (a, b) => (b.name ?? '').compareTo(a.name ?? ''),
                   //Get the country information relevant to the initial selection
-                  onInit: (code) =>
-                      print("on init ${code.name} ${code.dialCode} ${code.name}"),
+                  onInit: (code) => print(
+                      "on init ${code?.name} ${code?.dialCode} ${code?.name}"),
                 ),
                 CountryCodePicker(
                   onChanged: print,
@@ -152,12 +152,12 @@ class _MyAppState extends State<MyApp> {
                   portalWidth: 400,
                   portalHeight: 250,
                   dropDownMargin: EdgeInsets.only(left: 10),
-                  builder: (item){
-                   return Container(
-                     color: Colors.yellow,
-                     width: 200,
-                     child: Text(
-                        "Country name: ${item.name}",
+                  builder: (item) {
+                    return Container(
+                      color: Colors.yellow,
+                      width: 200,
+                      child: Text(
+                        "Country name: ${item?.name}",
                         style: TextStyle(
                           fontFamily: 'SFProText',
                           color: Colors.black,
@@ -167,7 +167,7 @@ class _MyAppState extends State<MyApp> {
                           letterSpacing: 0,
                         ),
                       ),
-                   );
+                    );
                   },
                 ),
                 SizedBox(
